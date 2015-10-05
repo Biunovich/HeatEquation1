@@ -189,17 +189,17 @@ public:
 void main()
 {
 	Teplo *teplo = new Teplo();
-	teplo->write();
+	//teplo->write();
 	//teplo->printtridiag();
 	inversion(teplo->tridiag, teplo->kt - 1);
 	//teplo->printtridiag();
 	for (int i = 1; i <= teplo->jt;i++)
 		teplo->vychsloy(i);
-	//teplo->write();
+	teplo->write();
 	printf("\n");
-	for (int i = 0; i < teplo->kt +1; i++) {
+	for (int j = 0; j < teplo->kt +1; j++) {
 		printf("\n");
-		for (int j = 0; j < teplo->jt; j++)
+		for (int i = 0; i < teplo->jt+1; i++)
 			printf("%lf ", teplo->u(i*teplo->sth, j*teplo->sttau));
 	}
 	printf("\n");

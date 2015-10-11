@@ -117,11 +117,11 @@ public:
 		double *uk = (double*)calloc(sizeof(double), kt);
 		for (int i = 0; i < kt - 1; i++) {
 			if (i == 0)
-				uk[i] = -(arr[n - 1][i + 1]+ f(i*sth + sth, n*sttau) + kurt* arr[n][0]);
+				uk[i] = -(arr[n - 1][i + 1]+ sttau*f(i*sth + sth, n*sttau) + kurt* arr[n][0]);
 			if (i == kt - 2)
-				uk[i] = -(arr[n - 1][i + 1]+ f(i*sth + sth, n*sttau) + kurt* arr[n][kt]);
-			uk[i] = -(arr[n - 1][i + 1] + f(i*sth + sth, n*sttau));
-			printf("%lf ", uk[i]);
+				uk[i] = -(arr[n - 1][i + 1]+ sttau*f(i*sth + sth, n*sttau) + kurt* arr[n][kt]);
+			uk[i] = -(arr[n - 1][i + 1] + sttau*f(i*sth + sth, n*sttau));
+			//printf("%lf ", uk[i]);
 		}
 		otv = progon(uk);
 		for (int i = 0; i < kt - 1; i++)
@@ -133,12 +133,13 @@ void main()
 	Teplo * teplo = new Teplo();
 	teplo->write();
 	teplo->printtridiag();
-	//for (int i = 1; i < teplo->jt+1;i++)
-		teplo->vychsloy(1);
+	for (int i = 1; i < teplo->jt+1;i++)
+		teplo->vychsloy(i);
 	teplo->write();
-	for (int j = 0; j < teplo->kt + 1; j++) {
+	for (int j = 0; j < teplo->jt + 1; j++) {
 		printf("\n");
-		for (int i = 0; i < teplo->jt + 1; i++)
+		for (int i = 0; i < teplo->kt + 1; i++)
 			printf("%lf ", teplo->u(i*teplo->sth, j*teplo->sttau));
 	}
+	printf("\n");
 }

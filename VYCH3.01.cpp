@@ -94,6 +94,8 @@ public:
 				tridiag[j][j] = -(1.0 + 2 * kurt);
 			}
 		}
+		tridiag[0][1] = 0; 
+		tridiag[kt - 2][kt - 3] = 0;
 
 	}
 	double * progon(double * uk)

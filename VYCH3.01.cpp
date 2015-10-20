@@ -11,19 +11,19 @@ public:
 	double A = 0.033;
 	double f(double x, double t)
 	{
-		return (x + 2.0 * t - exp(x) + A*(12.0 * pow(x, 2) - 2.0 + t*exp(x)));
+		return (x + 2.0 * t - exp(x) + A*(12.0 * powl(x, 2.0) - 2.0 + t*exp(x)));
 	}
 	double nu(double x)
 	{
-		return (-pow(x, 4) + pow(x, 2));
+		return (-powl(x, 4) + powl(x, 2));
 	}
 	double u(double x, double t)
 	{
-		return(-pow(x, 4) + pow(x, 2) + t*x + pow(t, 2) - t* exp(x));
+		return(-powl(x, 4.0) + powl(x, 2.0) + t*x + powl(t, 2.0) - t* exp(x));
 	}
 	double nu1(double t)
 	{
-		return (pow(t, 2) - t);
+		return (powl(t, 2) - t);
 	}
 	void printtridiag()
 	{
@@ -39,14 +39,14 @@ public:
 	{
 		for (int i = 0; i < jt + 1; i++) {
 			printf("\n");
-			for (int j = 0; j < kt + 1; j++)
-				printf("%lf ", arr[i][j]);
+			//for (int j = 0; j < kt + 1; j++)
+				printf("%lf ", arr[i][kt/2]);
 		}
 		printf("\n");
 	}
 	double nu2(double t)
 	{
-		return (t + pow(t, 2) - t*exp(1));
+		return (t + powl(t, 2.0) - t*exp(1.0));
 	}
 	Teplo()
 	{
@@ -94,9 +94,6 @@ public:
 				tridiag[j][j] = -(1.0 + 2 * kurt);
 			}
 		}
-		tridiag[0][1] = 0; 
-		tridiag[kt - 2][kt - 3] = 0;
-
 	}
 	double * progon(double * uk)
 	{
@@ -128,20 +125,40 @@ public:
 		otv = progon(uk);
 		for (int i = 0; i < kt - 1; i++)
 			arr[n][i + 1] = otv[i];
+		for (int j = 0; j < kt - 1; j++)
+		{
+			if (j == 0)
+			{
+				tridiag[j][j] = -(1.0 + 2 * kurt);
+				tridiag[j][j + 1] = kurt;
+			}
+			if (j > 0 && j < kt - 1)
+			{
+				tridiag[j][j - 1] = kurt;
+				tridiag[j][j] = -(1.0 + 2 * kurt);
+				tridiag[j][j + 1] = kurt;
+			}
+			if (j == kt - 2)
+			{
+				tridiag[j][j - 1] = kurt;
+				tridiag[j][j] = -(1.0 + 2 * kurt);
+			}
+			//tridiag[0][1] = 0; tridiag[1][0] = 0;
+		}
 	}
 };
 void main()
 {
 	Teplo * teplo = new Teplo();
-	teplo->write();
-	teplo->printtridiag();
+	//teplo->write();
+	//teplo->printtridiag();
 	for (int i = 1; i < teplo->jt+1;i++)
 		teplo->vychsloy(i);
 	teplo->write();
 	for (int j = 0; j < teplo->jt + 1; j++) {
 		printf("\n");
-		for (int i = 0; i < teplo->kt + 1; i++)
-			printf("%lf ", teplo->u(i*teplo->sth, j*teplo->sttau));
+		//for (int i = 0; i < teplo->kt + 1; i++)
+			printf("%lf ", teplo->u(((teplo->kt)/2)*teplo->sth, j*teplo->sttau));
 	}
 	printf("\n");
 }

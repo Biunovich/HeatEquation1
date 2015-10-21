@@ -39,8 +39,8 @@ public:
 	{
 		for (int i = 0; i < jt + 1; i++) {
 			printf("\n");
-			//for (int j = 0; j < kt + 1; j++)
-				printf("%lf ", arr[i][kt/2]);
+			for (int j = 0; j < kt + 1; j++)
+				printf("%lf ", arr[i][j]);
 		}
 		printf("\n");
 	}
@@ -114,13 +114,26 @@ public:
 	{
 		double *otv;
 		double *uk = (double*)calloc(sizeof(double), kt);
-		for (int i = 0; i < kt - 1; i++) {
-			if (i == 0)
-				uk[i] = -(arr[n - 1][i + 1]+ sttau*f(i*sth + sth, n*sttau) + kurt* arr[n][0]);
-			if (i == kt - 2)
-				uk[i] = -(arr[n - 1][i + 1]+ sttau*f(i*sth + sth, n*sttau) + kurt* arr[n][kt]);
-			uk[i] = -(arr[n - 1][i + 1] + sttau*f(i*sth + sth, n*sttau));
-			//printf("%lf ", uk[i]);
+		if (n == jt)
+		{
+			for (int i = 0; i < kt - 1; i++) {
+				if (i == 0)
+					uk[i] = -(arr[n - 1][i + 1]);
+				if (i == kt - 2)
+					uk[i] = -(arr[n - 1][i + 1]);
+				uk[i] = -(arr[n - 1][i + 1]);
+			}
+		}
+		else
+		{
+			for (int i = 0; i < kt - 1; i++) {
+				if (i == 0)
+					uk[i] = -(arr[n - 1][i + 1] + sttau*f(i*sth + sth, n*sttau) + kurt* arr[n][0]);
+				if (i == kt - 2)
+					uk[i] = -(arr[n - 1][i + 1] + sttau*f(i*sth + sth, n*sttau) + kurt* arr[n][kt]);
+				uk[i] = -(arr[n - 1][i + 1] + sttau*f(i*sth + sth, n*sttau));
+				//printf("%lf ", uk[i]);
+			}
 		}
 		otv = progon(uk);
 		for (int i = 0; i < kt - 1; i++)
@@ -157,8 +170,8 @@ void main()
 	teplo->write();
 	for (int j = 0; j < teplo->jt + 1; j++) {
 		printf("\n");
-		//for (int i = 0; i < teplo->kt + 1; i++)
-			printf("%lf ", teplo->u(((teplo->kt)/2)*teplo->sth, j*teplo->sttau));
+		for (int i = 0; i < teplo->kt + 1; i++)
+			printf("%lf ", teplo->u(i*teplo->sth, j*teplo->sttau));
 	}
 	printf("\n");
 }

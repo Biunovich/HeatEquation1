@@ -11,19 +11,19 @@ public:
 	double A = 0.033;
 	double f(double x, double t)
 	{
-		return (x + 2.0 * t - exp(x) + A*(12.0 * powl(x, 2.0) - 2.0 + t*exp(x)));
+		return (x + 2.0 * t - exp(x) + A*(12.0 * pow(x, 2) - 2.0 + t*exp(x)));
 	}
 	double nu(double x)
 	{
-		return (-powl(x, 4) + powl(x, 2));
+		return (-pow(x, 4) + pow(x, 2));
 	}
 	double u(double x, double t)
 	{
-		return(-powl(x, 4.0) + powl(x, 2.0) + t*x + powl(t, 2.0) - t* exp(x));
+		return(-pow(x, 4) + pow(x, 2) + t*x + pow(t, 2) - t* exp(x));
 	}
 	double nu1(double t)
 	{
-		return (powl(t, 2) - t);
+		return (pow(t, 2) - t);
 	}
 	void printtridiag()
 	{
@@ -39,14 +39,14 @@ public:
 	{
 		for (int i = 0; i < jt + 1; i++) {
 			printf("\n");
-			for (int j = 0; j < kt + 1; j++)
-				printf("%lf ", arr[i][j]);
+			//for (int j = 0; j < kt + 1; j++)
+				printf("%lf ", arr[i][kt/2]);
 		}
 		printf("\n");
 	}
 	double nu2(double t)
 	{
-		return (t + powl(t, 2.0) - t*exp(1.0));
+		return (t + pow(t, 2) - t*exp(1.0));
 	}
 	Teplo()
 	{
@@ -114,26 +114,16 @@ public:
 	{
 		double *otv;
 		double *uk = (double*)calloc(sizeof(double), kt);
-		if (n == jt)
-		{
-			for (int i = 0; i < kt - 1; i++) {
-				if (i == 0)
-					uk[i] = -(arr[n - 1][i + 1]);
-				if (i == kt - 2)
-					uk[i] = -(arr[n - 1][i + 1]);
-				uk[i] = -(arr[n - 1][i + 1]);
+		for (int i = 0; i < kt - 1; i++) {
+			if (i == 0) {
+				uk[i] = -(arr[n - 1][i + 1] + sttau*f(i*sth + sth, n*sttau) + kurt* arr[n][0]);
+				continue;
 			}
-		}
-		else
-		{
-			for (int i = 0; i < kt - 1; i++) {
-				if (i == 0)
-					uk[i] = -(arr[n - 1][i + 1] + sttau*f(i*sth + sth, n*sttau) + kurt* arr[n][0]);
-				if (i == kt - 2)
-					uk[i] = -(arr[n - 1][i + 1] + sttau*f(i*sth + sth, n*sttau) + kurt* arr[n][kt]);
-				uk[i] = -(arr[n - 1][i + 1] + sttau*f(i*sth + sth, n*sttau));
-				//printf("%lf ", uk[i]);
+			if (i == kt - 2) {
+				uk[i] = -(arr[n - 1][i + 1] + sttau*f(i*sth + sth, n*sttau) + kurt* arr[n][kt]);
+				continue;
 			}
+			uk[i] = -(arr[n - 1][i + 1] + sttau*f(i*sth + sth, n*sttau));
 		}
 		otv = progon(uk);
 		for (int i = 0; i < kt - 1; i++)
@@ -141,7 +131,7 @@ public:
 		for (int j = 0; j < kt - 1; j++)
 		{
 			if (j == 0)
-			{
+			{ 
 				tridiag[j][j] = -(1.0 + 2 * kurt);
 				tridiag[j][j + 1] = kurt;
 			}
@@ -168,10 +158,10 @@ void main()
 	for (int i = 1; i < teplo->jt+1;i++)
 		teplo->vychsloy(i);
 	teplo->write();
-	for (int j = 0; j < teplo->jt + 1; j++) {
+	for (int j = 0; j < teplo->jt +1; j++) {
 		printf("\n");
-		for (int i = 0; i < teplo->kt + 1; i++)
-			printf("%lf ", teplo->u(i*teplo->sth, j*teplo->sttau));
+		//for (int i = 0; i < teplo->kt + 1; i++)
+			printf("%lf ", teplo->u(((teplo->kt)/2)*teplo->sth, j*teplo->sttau));
 	}
 	printf("\n");
 }

@@ -145,28 +145,30 @@ public:
 				tridiag[j][j - 1] = kurt;
 				tridiag[j][j] = -(1.0 + 2 * kurt);
 			}
-			//tridiag[0][1] = 0; tridiag[1][0] = 0;
 		}
+	}
+	void toFile()
+	{
+		FILE * f = fopen("output.txt", "w");
+		for (int i = 0; i < jt + 1; i++) {
+			for (int j = 0; j < kt + 1; j++)
+				fprintf(f, "%lf %lf %lf\n", i*sttau, j*sth, arr[i][j]);
+			fprintf(f, "\n");
+		}
+		FILE *g = fopen("output1.txt", "w");
+		for (int i = 0; i < jt + 1; i++) {
+			for (int j = 0; j < kt + 1; j++)
+				fprintf(g, "%lf %lf %lf\n", i*sttau, j*sth, u(j*sth, i*sttau));
+			fprintf(g, "\n");
+		}
+		fclose(f);
+		fclose(g);
 	}
 };
 void main()
 {
 	Teplo * teplo = new Teplo();
-	//teplo->write();
-	//teplo->printtridiag();
 	for (int i = 1; i < teplo->jt+1;i++)
 		teplo->vychsloy(i);
-	//teplo->write();
-	//for (int j = 0; j < teplo->jt +1; j++) {
-	//	printf("\n");
-	//	for (int i = 0; i < teplo->kt + 1; i++)
-	//		printf("%lf ", teplo->u(i*teplo->sth, j*teplo->sttau));
-	//}
-	printf("\n");
-	FILE * f = fopen("output.txt", "w");
-	for (int i = 0; i < teplo->jt+1; i++) {
-		for (int j = 0; j < teplo->kt+1; j++)
-			fprintf(f, "%lf %lf %lf\n",j*teplo->sth,teplo->arr[i][j], teplo->u(j*teplo->sth, i*teplo->sttau));
-		fprintf(f, "\n");
-	}
+	teplo->toFile();
 }

@@ -1,0 +1,1 @@
+splot "output.txt" title "approximation" w l, "output1.txt" title "function" w l
